@@ -40,15 +40,28 @@ Describe "Try using Mock <_>" -ForEach @(
 
         Mock Get-Service @module {
             [PSCustomObject]@{
-                Name = $Name
+                Name = $_.Name
                 Status = $_.CurrentStatus
             }
         }
         Set-ServiceState -Path file.csv
-        Should -Not -Invoke Start-Service @module -ParameterFilter { $Name -eq 'service1' }
-        Should -Not -Invoke Stop-Service @module -ParameterFilter { $Name -eq 'service1' }
-#        Should -Invoke Stop-Service @module -ParameterFilter { $Name -eq 'service2' }
-#        Should -Not -Invoke Start-Service @module -ParameterFilter { $Name -eq 'service4' }
-#        Should -Not -Invoke Stop-Service @module -ParameterFilter { $Name -eq 'service4' }
+
+        if ($_.CurrentStatus -eq "Running" -and $_.ExpectedStatus -eq "Running") {
+            Should -Not -Invoke Start-Service @module
+            Should -Not -Invoke Stop-Service @module
+        }
+        elseif ($_.CurrentStatus -eq "Running" -and $_.ExpectedStatus -eq "Stopped") {
+            Should -Invoke Stop-Service @module -ParameterFilter { $Name -eq 'service2' }
+        }
+        elseif ($_.CurrentStatus -eq "Stopped" -and $_.ExpectedStatus -eq "Running") {
+            Should -Invoke Start-Service @module -ParameterFilter { $Name -eq 'service3' }
+        }
+        elseif ($_.CurrentStatus -eq "Stopped" -and $_.ExpectedStatus -eq "Stopped") {
+            Should -Not -Invoke Start-Service @module -ParameterFilter { $Name -eq 'service4' }
+            Should -Not -Invoke Stop-Service @module -ParameterFilter { $Name -eq 'service4' }
+        }
+        else {
+            Assert-Fail -Message "This test shall get here." 
+        }
     }
 }

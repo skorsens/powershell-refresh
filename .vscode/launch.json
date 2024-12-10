@@ -8,7 +8,7 @@
             "name": "PowerShell Run Pester Tests",
             "type": "PowerShell",
             "request": "launch",
-            "script": "Invoke-Pester",
+            "script": "Invoke-Pester -Path ${file}",
             "createTemporaryIntegratedConsole": true,
             "attachDotnetDebugger": true
         },

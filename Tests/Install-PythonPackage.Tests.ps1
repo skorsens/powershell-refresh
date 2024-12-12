@@ -1,5 +1,3 @@
-# Tests\Install-PythonPackage.Tests.ps1
-
 # Import the script to be tested
 BeforeAll {
     . "$PSScriptRoot/../Install-PythonPackage.ps1"
@@ -7,30 +5,33 @@ BeforeAll {
 
 Describe "Install-PythonPackage Function Tests" {
     BeforeAll {
+        $PackageName = "test-package"
+        $expectedPipParams = @('-m', 'pip', 'install', $PackageName, '-U', '-i', 'https://mvhlab:pswd@intelpypi.intel.com/pythonsv/production' )
+
         Mock -CommandName py -MockWith { return }
+        Mock -CommandName Write-Message
     }
 
     It "Should call pip install with the correct package name" {
         # Arrange
-        $PackageName = "test-package"
 
         # Act
         Install-PythonPackage -PackageName $PackageName
 
         # Assert
-        Assert-MockCalled -CommandName py -Exactly 1 -Scope It -ParameterFilter { $args -eq @('-m', 'pip', 'install', $PackageName, '-U', '-i', 'https://mvhlab:pswd@intelpypi.intel.com/pythonsv/production') }
+        Should -Invoke py -Times 1 -Exactly -ParameterFilter { (Compare-Object $args $expectedPipParams).Count -eq 0 }
+        Should -Invoke Write-Message -Times 1 -Exactly -ParameterFilter { $message -eq "Installing package $PackageName succeeded" }
     }
 
     It "Should log a message if pip install fails" {
         # Arrange
-        $PackageName = "test-package"
         Mock -CommandName py -MockWith { throw "Installation failed" }
-        Mock -CommandName Write-Message
 
         # Act
         Install-PythonPackage -PackageName $PackageName
 
         # Assert
-        Assert-MockCalled -CommandName Write-Message -Exactly 1 -Scope It -ParameterFilter { $args[0] -eq "Installing package $PackageName failed" }
+        Should -Invoke py -Times 1 -Exactly -ParameterFilter { (Compare-Object $args $expectedPipParams).Count -eq 0 }
+        Should -Invoke Write-Message -Times 1 -Exactly -ParameterFilter { $message -eq "Installing package $PackageName failed: Installation failed" }
     }
 }

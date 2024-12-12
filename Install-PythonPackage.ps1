@@ -30,7 +30,8 @@ function Install-PythonPackage {
     )
     try {
         py -m pip install $PackageName -U -i https://mvhlab:pswd@intelpypi.intel.com/pythonsv/production
+        Write-Message "Installing package $PackageName succeeded"
     } catch {
-        Write-Message "Installing package $PackageName failed"
+        Write-Message "Installing package $PackageName failed: $_"
     }
 }

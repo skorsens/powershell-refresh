@@ -1,6 +1,7 @@
 # Import the script to be tested
 BeforeAll {
     . "$PSScriptRoot/../Install-PythonPackage.ps1"
+    . "$PSScriptRoot/../Write-Message.ps1"
 }
 
 Describe "Install-PythonPackage Function Tests" {

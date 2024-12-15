@@ -21,6 +21,17 @@ Describe "Learning Pester" {
             { throw "Throwing exception" } | Should -Throw -ExpectedMessage "Throwing exception"
         }
 
+        It "Try the Throw assertion on a function" {
+            function ThrowException {
+                Write-Host "Throwing exception"
+                throw "Throwing exception"
+            }
+
+            Mock Write-Host
+            { ThrowException } | Should -Throw "Throwing exception"
+            Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $message -eq "Throwing exception" }
+        }
+
         It "Try <Name> iteration using ForEach & hash" -ForEach @(
             @{Name = "Name 1" }
             @{Name = "Name 2" }

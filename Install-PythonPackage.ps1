@@ -33,5 +33,7 @@ function Install-PythonPackage {
         Write-Message "Installing package $PackageName succeeded"
     } catch {
         Write-Message "Installing package $PackageName failed: $_"
+
+        throw
     }
 }

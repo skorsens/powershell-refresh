@@ -27,10 +27,8 @@ Describe "Install-PythonPackage Function Tests" {
         # Arrange
         Mock -CommandName py -MockWith { throw "Installation failed" }
 
-        # Act
-        Install-PythonPackage -PackageName $PackageName
-
-        # Assert
+        # Act and Assert
+        { Install-PythonPackage -PackageName $PackageName } | Should -Throw "Installation failed"
         Should -Invoke py -Times 1 -Exactly -ParameterFilter { (Compare-Object $args $expectedPipParams).Count -eq 0 }
         Should -Invoke Write-Message -Times 1 -Exactly -ParameterFilter { $message -eq "Installing package $PackageName failed: Installation failed" }
     }

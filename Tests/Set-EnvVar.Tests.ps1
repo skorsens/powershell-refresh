@@ -29,14 +29,14 @@ Describe "Set-EnvVar Function Tests" {
             }
             
             $envName = "TestEnvVar"
-            $envName = "TestValue"
+            $envValue = "TestValue"
             $EnvironmentClass = [_CEnvironmentStub]
             $EnvironmentClass::SetEnvironmentVariable($envName, $null)
             # Act
             Set-EnvVar -Name $envName -Value $envValue
 
             # Assert
-            Should -Invoke Write-Message #-ParameterFilter  { $message -eq "Setting environment variable $envName to $envName" }
+            Should -Invoke Write-Message #-ParameterFilter  { $message -eq "Setting environment variable $envName to $envValue" }
         }
     }
 

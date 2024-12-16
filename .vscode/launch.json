@@ -5,33 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PowerShell Debug Pester Tests",
-            "type": "PowerShell",
-            "request": "launch",
-            "script": "Invoke-Pester -Path '${file}'",
-            "createTemporaryIntegratedConsole": true,
-            "attachDotnetDebugger": true
-        },
-        {
             "name": "PowerShell: Launch Current File",
             "type": "PowerShell",
             "request": "launch",
             "script": "${file}",
             "args": []
-        },
-        {
-            "name": "PowerShell Run Pester Tests Without Debugger",
-            "type": "PowerShell",
-            "request": "launch",
-            "script": "Invoke-Pester -Path '${file}'",
-            "createTemporaryIntegratedConsole": true
-        },
-        {
-            "name": "PowerShell Run Pester Tests with Code Coverage",
-            "type": "PowerShell",
-            "request": "launch",
-            "script": "Invoke-Pester -Path '${file}' -CodeCoverage '${workspaceFolder}\\..\\*.ps1' -OutputFormat 'NUnitXml' -OutputFile 'coverage.xml'",
-            "createTemporaryIntegratedConsole": true
         }
     ]
 }

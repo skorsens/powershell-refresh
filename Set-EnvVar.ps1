@@ -37,17 +37,17 @@ class _CEnvironmentWin
     }
 }
 
-[object]$EnvironmentClass=[_CEnvironmentWin]
 
 function Set-EnvVar {
     param (
         [string]$Name,
-        [string]$Value
+        [string]$Value,
+        [object]$EnvironmentClass=[_CEnvironmentWin]
     )
     $CurrValue = $EnvironmentClass::GetEnvironmentVariable($Name)
 
     if ($CurrValue -ne $Value) {
-        if ($null -eq $CurrValue) {
+        if ("" -eq $CurrValue) {
             Write-Message -message "Setting environment variable $Name to $Value"
         }
         else {
@@ -68,4 +68,3 @@ function Set-EnvVar {
         Write-Message -Message "Environment variable $Name is already set to $Value"
     }
 }
-
